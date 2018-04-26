@@ -5,8 +5,20 @@ var Recipe = new Schema({
   title: {
     type: String
   },
-  token: {
+  instructions: {
     type: String
+  },
+  description: {
+    type: String
+  },
+  ingredients: {
+    type: String
+  },
+  notes: {
+    type: String
+  },
+  created_at: {
+    type: Date
   }
 });
 

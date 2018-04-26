@@ -8,6 +8,9 @@ var Session = new Schema({
   },
   token: {
     type: String
+  },
+  created_at: {
+    type: Date
   }
 });
 
