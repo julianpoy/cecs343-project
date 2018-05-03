@@ -22,4 +22,4 @@ var Recipe = new Schema({
   }
 });
 
-mongoose.model('Session', Session);
+mongoose.model('Recipe', Recipe);

@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var Session = new Schema({
   user_id: {
-    type: String
+    type: String,
     ref: 'User'
   },
   token: {
