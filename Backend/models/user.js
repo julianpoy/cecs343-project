@@ -10,6 +10,12 @@ var User = new Schema({
   },
   salt: {
     type: String
+  },
+  name: {
+    type: String
+  },
+  created_at: {
+    type: Date
   }
 });
 
