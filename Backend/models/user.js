@@ -11,7 +11,8 @@ var User = new Schema({
   salt: {
     type: String
   },
-  name: {
+  //screen name for public use and sharing recipes
+  screenname: {
     type: String
   },
   created_at: {
