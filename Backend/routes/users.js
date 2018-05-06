@@ -27,7 +27,7 @@ router.post('/login', function(req, res) {
         //Compare to stored hash
         if (hash == user.password) {
           //Create a random token
-          var token = crypto.randomBytes(48).toString('base64');
+          var token = crypto.randomBytes(48).toString('hex');
           //New session!
           new Session({
             user_id: user._id,
@@ -174,25 +174,25 @@ router.put('/', function(req, res, next) {
 /* Check if a session token is valid */
 router.get('/session', function(req, res, next) {
   Session.findOne({
-      token: req.query.token
-    })
-    .select('user_id')
-    .exec(function(err, session) {
-      if (err) {
-        res.status(500).json({
-          msg: "Couldn't search the database for session!"
-        });
-      } else if (!session) {
-        res.status(401).json({
-          msg: "Session is not valid!"
-        });
-      } else {
-        //Then the user exists, and the session token is valid!
-        res.status(200).json({
-          token: req.query.token
-        });
-      }
-    });
+    token: req.query.token
+  })
+  .select('user_id')
+  .exec(function(err, session) {
+    if (err) {
+      res.status(500).json({
+        msg: "Couldn't search the database for session!"
+      });
+    } else if (!session) {
+      res.status(401).json({
+        msg: "Session is not valid!"
+      });
+    } else {
+      //Then the user exists, and the session token is valid!
+      res.status(200).json({
+        token: req.query.token
+      });
+    }
+  });
 });
 
 module.exports = router;

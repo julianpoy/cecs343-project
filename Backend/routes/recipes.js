@@ -29,7 +29,8 @@ router.post('/', function(req, res) {
           ingredients: req.body.ingredients,
           notes: req.body.notes,
           created_at: Date.now(),
-          updated_at: Date.now()
+          updated_at: Date.now(),
+          is_public: req.body.isPublic
         }).save(function(err, recipe, count) {
           //.save will save our new link object in the backend
           if (err) {

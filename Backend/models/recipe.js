@@ -25,6 +25,10 @@ var Recipe = new Schema({
   },
   updated_at: {
     type: Date
+  },
+  is_public: {
+    type: Boolean,
+    default: false
   }
 });
 
