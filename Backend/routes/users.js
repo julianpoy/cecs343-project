@@ -80,6 +80,7 @@ router.post('/join', function(req, res, next) {
           //Create a new user with the assembled information
           var newUser = new User({
             username: req.body.username.toLowerCase(),
+            screenname: req.body.screenname,
             password: hash,
             salt: salt
           }).save(function(err, newUser) {
@@ -123,7 +124,7 @@ router.put('/', function(req, res, next) {
     });
   } else {
     Session.findOne({
-        token: req.body.token
+        token: req.query.token
       })
       .select('user_id')
       .exec(function(err, session) {
@@ -139,6 +140,7 @@ router.put('/', function(req, res, next) {
           var updatedUser = {};
 
           if (req.body.username && typeof req.body.username === 'string') updatedUser.username = req.body.username;
+          if (req.body.screenname && typeof req.body.screenname === 'string') updatedUser.screenname = req.body.screenname;
           if (req.body.password && typeof req.body.password === 'string') {
             //Create a random salt
             var salt = crypto.randomBytes(128).toString('base64');
