@@ -16,7 +16,7 @@ export default {
     };
   },
   beforeMount() {
-    ApiConnectorService.save(this.recipe, (response) => {
+    ApiConnectorService.recipes.getById(this.$route.params.id, (response) => {
       this.recipe = response;
     }, (err) => {
       this.error = `There was an error... ${err.response.data.msg}`;

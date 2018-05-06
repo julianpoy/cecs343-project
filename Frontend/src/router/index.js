@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Auth from '@/components/Auth';
 import Welcome from '@/components/Welcome';
+import Settings from '@/components/Settings';
 
 import Recipes from '@/components/Recipes';
 import ViewRecipe from '@/components/ViewRecipe';
@@ -41,6 +42,11 @@ export default new Router({
       path: '/auth',
       name: 'Auth',
       component: Auth,
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
     },
   ],
 });

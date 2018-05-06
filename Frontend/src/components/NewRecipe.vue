@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     save() {
-      ApiConnectorService.create(this.recipe, (response) => {
+      ApiConnectorService.recipes.create(this.recipe, (response) => {
         window.location.href = `/#/recipes/${response['_id']}`;
       }, (err) => {
         this.error = `There was an error... ${err.response.data.msg}`;

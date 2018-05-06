@@ -7,8 +7,11 @@
       <button class="standard" v-on:click="createRecipe()">New Recipe</button>
     </div>
     <br />
-    <div class="recipe" v-for="recipe in recipes" :key="recipe._id">
-      {{ recipe.title }}
+    <div class="recipeListContainer">
+      <div class="recipe" v-for="recipe in recipes" :key="recipe._id" v-on:click="openRecipe(recipe._id)">
+        <b>{{ recipe.title }}</b><br /><br />
+        {{ recipe.description }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +31,9 @@ export default {
     createRecipe() {
       window.location.href = '/#/recipes/new';
     },
+    openRecipe(id) {
+      window.location.href = `/#/recipes/${id}`;
+    },
   },
   beforeMount() {
     ApiConnectorService.recipes.fetch((recipes) => {
@@ -45,10 +51,15 @@ export default {
     padding: 20px;
   }
 
-  .recipe {
-    border: 1px solid blue;
-    padding: 5px;
+  .recipeListContainer {
+    display: flex;
+  }
+
+  .recipeListContainer .recipe {
+    padding: 15px;
     margin: 10px;
+    box-shadow: 1px 1px 7px rgba(0,0,0,0.7);
+    min-width: 300px;
   }
   
   .pageTitle {

@@ -3,20 +3,22 @@
     <br /><br /><br />
     {{ isRegistering ? 'Register' : 'Login' }}
     <br /><br />
-    <input v-if="isRegistering" v-model="name" class="standard name" placeholder="Name" type="text" />
-    <br />
-    <input v-model="username" class="standard username" placeholder="E-Mail" type="text" />
-    <br />
-    <input v-model="password" class="standard password" placeholder="Password" type="password" />
-    <br v-if="isRegistering" />
-    <input
-      v-if="isRegistering"
-      v-model="confirm"
-      class="password"
-      placeholder="Confirm password"
-      type="password" />
-    <br /><br />
-    <button class="standard submit" v-on:click="auth">{{ isRegistering ? 'Register' : 'Login' }}</button>
+    <form onsubmit="return false">
+      <input v-if="isRegistering" v-model="name" class="standard name" placeholder="Name" type="text" />
+      <br />
+      <input v-model="username" class="standard username" placeholder="E-Mail" type="text" />
+      <br />
+      <input v-model="password" class="standard password" placeholder="Password" type="password" />
+      <br v-if="isRegistering" />
+      <input
+        v-if="isRegistering"
+        v-model="confirm"
+        class="password"
+        placeholder="Confirm password"
+        type="password" />
+      <br /><br />
+      <button type="submit" class="standard submit" v-on:click="auth">{{ isRegistering ? 'Register' : 'Login' }}</button>
+    </form>
     <br /><br />
     <a v-if="!isRegistering" v-on:click="isRegistering = true">Register Instead</a>
     <a v-if="isRegistering" v-on:click="isRegistering = false">Login Instead</a>

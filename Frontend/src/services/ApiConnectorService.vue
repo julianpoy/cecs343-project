@@ -46,6 +46,15 @@ export default {
           error(e);
         });
     },
+    getById(id, success, error) {
+      axios.get(`${apiBase}recipes/${id}${getTokenQuery()}`)
+        .then((response) => {
+          success(response.data);
+        })
+        .catch((e) => {
+          error(e);
+        });
+    },
     create(payload, success, error) {
       axios.post(`${apiBase}recipes${getTokenQuery()}`, payload)
         .then((response) => {

@@ -5,14 +5,17 @@
         CECS 343 Recipe Program
       </div>
       <div class="nav-content">
-        <div class="item" v-if="isLoggedIn" v-on:click="goTo('recipes')">
+        <div class="item" v-if="isLoggedIn()" v-on:click="goTo('recipes')">
           Recipes
         </div>
-        <div class="item" v-if="!isLoggedIn" v-on:click="goTo('auth')">
-          Login or Register
+        <div class="item" v-if="isLoggedIn()" v-on:click="goTo('settings')">
+          Settings
         </div>
-        <div class="item" v-if="isLoggedIn" v-on:click="logout()">
+        <div class="item" v-if="isLoggedIn()" v-on:click="logout()">
           Logout
+        </div>
+        <div class="item" v-if="!isLoggedIn()" v-on:click="goTo('auth')">
+          Login or Register
         </div>
       </div>
     </div>
@@ -24,9 +27,7 @@
 export default {
   name: 'App',
   data() {
-    return {
-      isLoggedIn: localStorage.getItem('token'),
-    };
+    return {};
   },
   methods: {
     goTo(route) {
@@ -35,6 +36,9 @@ export default {
     logout() {
       localStorage.removeItem('token');
       this.goTo('auth');
+    },
+    isLoggedIn() {
+      return localStorage.getItem('token');
     },
   },
 };
