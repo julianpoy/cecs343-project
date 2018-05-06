@@ -3,9 +3,10 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Recipe = mongoose.model('Recipe');
 var Session = mongoose.model('Session');
+var cors = require('cors');
 
 //Create a new link
-router.post('/', function(req, res) {
+router.post('/', cors(), function(req, res) {
   Session.findOne({
       token: req.query.token
     })
@@ -46,7 +47,7 @@ router.post('/', function(req, res) {
 });
 
 //Get all of a user's recipes
-router.get('/', function(req, res) {
+router.get('/', cors(), function(req, res) {
   Session.findOne({
       token: req.query.token
     })
@@ -78,7 +79,7 @@ router.get('/', function(req, res) {
 
 
 //Update a recipe
-router.put('/:id', function(req, res) {
+router.put('/:id', cors(), function(req, res) {
   Session.findOne({
       token: req.query.token
     })
@@ -128,7 +129,7 @@ router.put('/:id', function(req, res) {
 //DELETE
 //Using the ORM (object relational mapping) which is mongoose
 //it will find a recipe by it's mongoose id, and remove it from the backend
-router.delete('/:id', function(req, res) {
+router.delete('/:id', cors(), function(req, res) {
   Session.findOne({
       token: req.query.token
     })
