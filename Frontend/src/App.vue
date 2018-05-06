@@ -1,5 +1,21 @@
 <template>
   <div id="app">
+    <div class="nav">
+      <div class="nav-header">
+        CECS 343 Recipe Program
+      </div>
+      <div class="nav-content">
+        <div class="item" v-if="isLoggedIn" v-on:click="goTo('recipes')">
+          Recipes
+        </div>
+        <div class="item" v-if="!isLoggedIn" v-on:click="goTo('auth')">
+          Login or Register
+        </div>
+        <div class="item" v-if="isLoggedIn" v-on:click="logout()">
+          Logout
+        </div>
+      </div>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -7,10 +23,69 @@
 <script>
 export default {
   name: 'App',
+  data() {
+    return {
+      isLoggedIn: localStorage.getItem('token'),
+    };
+  },
+  methods: {
+    goTo(route) {
+      window.location.href = `/#/${route}`;
+    },
+    logout() {
+      localStorage.removeItem('token');
+      this.goTo('auth');
+    },
+  },
 };
 </script>
 
 <style>
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+html {
+  background: lightgrey;
+}
+
+body {
+  background: white;
+  box-shadow: 1px 1px 7px rgba(0,0,0,0.7);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+}
+
+.nav {
+  box-shadow: 1px 1px 7px rgba(0,0,0,0.7);
+  background: #222f3e;
+  color: white;
+}
+
+.nav .nav-header {
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.nav .nav-content {
+  float: right;
+  text-align: right;
+}
+
+.nav .nav-content .item {
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
+  cursor: pointer;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -19,4 +94,5 @@ export default {
   /*color: #2c3e50;*/
   /*margin-top: 60px;*/
 }
+
 </style>

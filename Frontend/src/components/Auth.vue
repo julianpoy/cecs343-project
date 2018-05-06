@@ -3,11 +3,11 @@
     <br /><br /><br />
     {{ isRegistering ? 'Register' : 'Login' }}
     <br /><br />
-    <input v-if="isRegistering" v-model="name" class="name" placeholder="Name" type="text" />
+    <input v-if="isRegistering" v-model="name" class="standard name" placeholder="Name" type="text" />
     <br />
-    <input v-model="username" class="username" placeholder="Username" type="text" />
+    <input v-model="username" class="standard username" placeholder="E-Mail" type="text" />
     <br />
-    <input v-model="password" class="password" placeholder="Password" type="password" />
+    <input v-model="password" class="standard password" placeholder="Password" type="password" />
     <br v-if="isRegistering" />
     <input
       v-if="isRegistering"
@@ -16,7 +16,7 @@
       placeholder="Confirm password"
       type="password" />
     <br /><br />
-    <button class="submit" v-on:click="auth">{{ isRegistering ? 'Register' : 'Login' }}</button>
+    <button class="standard submit" v-on:click="auth">{{ isRegistering ? 'Register' : 'Login' }}</button>
     <br /><br />
     <a v-if="!isRegistering" v-on:click="isRegistering = true">Register Instead</a>
     <a v-if="isRegistering" v-on:click="isRegistering = false">Login Instead</a>
@@ -51,14 +51,18 @@ export default {
 
         ApiConnectorService.users.register(this.name, this.username, this.password, (response) => {
           localStorage.setItem('token', response.token);
+
+          window.location.href = '/#/recipes';
         }, (err) => {
-          this.error = `There was an error... ${err.message}`;
+          this.error = `There was an error... ${err.response.data.msg}`;
         });
       } else {
         ApiConnectorService.users.login(this.username, this.password, (response) => {
           localStorage.setItem('token', response.token);
+
+          window.location.href = '/#/recipes';
         }, (err) => {
-          this.error = `There was an error... ${err.message}`;
+          this.error = `There was an error... ${err.response.data.msg}`;
         });
       }
     },
@@ -72,13 +76,20 @@ export default {
     text-align: center;
   }
 
-  input {
+  a {
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+  
+  input, textarea {
     padding: 5px;
-    margin: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     border: 1px solid lightgrey;
     border-radius: 5px;
   }
-
+  
   button {
     border: none;
     padding: 10px;
@@ -86,11 +97,5 @@ export default {
     color: white;
     border-radius: 5px;
     cursor: pointer;
-  }
-
-  a {
-    cursor: pointer;
-    font-size: 12px;
-    text-decoration: underline;
   }
 </style>

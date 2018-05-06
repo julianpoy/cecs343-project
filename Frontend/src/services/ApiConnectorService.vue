@@ -1,10 +1,20 @@
 <script>
 import axios from 'axios';
 
+/* global localStorage */
+const apiBase = localStorage.getItem('base') || 'http://localhost:3000/';
+
+function getTokenQuery() {
+  return `?token=${localStorage.getItem('token')}`;
+}
+
 export default {
   users: {
     login(username, password, success, error) {
-      axios.get('http://jsonplaceholder.typicode.com/posts')
+      axios.post(`${apiBase}users/login`, {
+        username,
+        password,
+      })
         .then((response) => {
           success(response.data);
         })
@@ -13,7 +23,11 @@ export default {
         });
     },
     register(name, username, password, success, error) {
-      axios.get('http://jsonplaceholder.typicode.com/posts')
+      axios.post(`${apiBase}users/join`, {
+        screenname: name,
+        username,
+        password,
+      })
         .then((response) => {
           success(response.data);
         })
@@ -24,7 +38,16 @@ export default {
   },
   recipes: {
     fetch(success, error) {
-      axios.get('http://jsonplaceholder.typicode.com/posts')
+      axios.get(`${apiBase}recipes${getTokenQuery()}`)
+        .then((response) => {
+          success(response.data);
+        })
+        .catch((e) => {
+          error(e);
+        });
+    },
+    create(payload, success, error) {
+      axios.post(`${apiBase}recipes${getTokenQuery()}`, payload)
         .then((response) => {
           success(response.data);
         })
