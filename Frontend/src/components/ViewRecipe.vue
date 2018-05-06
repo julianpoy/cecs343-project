@@ -1,6 +1,20 @@
 <template>
   <div class="container">
-    {{ recipe.title }}
+    <div class="pageTitle">
+      {{ recipe.title }}
+      
+      <div class="actions">
+        <button>Edit</button>
+        <button>Delete</button>
+      </div>
+    </div>
+    <br />
+    
+    Description: {{ recipe.description }}<br /><br />
+    Ingedients: <br />
+    {{ recipe.ingredients }}<br /><br />
+    Instructions: <br />
+    {{ recipe.instructions }}<br />
   </div>
 </template>
 
@@ -26,4 +40,5 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+</style>

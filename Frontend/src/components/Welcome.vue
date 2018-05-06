@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    Welcome!
+    <div class="pageTitle">
+      Welcome
+    </div>
   </div>
 </template>
 
@@ -9,6 +11,11 @@ export default {
   name: 'Auth',
   data() {
     return {};
+  },
+  beforeMount() {
+    if (localStorage.getItem('token')) {
+      window.location.href = '/#/recipes';
+    }
   },
 };
 </script>

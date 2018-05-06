@@ -23,13 +23,4 @@ export default {
   .container {
     text-align: center;
   }
-
-  button {
-    border: none;
-    padding: 10px;
-    background: #273c75;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
 </style>

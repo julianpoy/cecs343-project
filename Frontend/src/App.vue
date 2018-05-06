@@ -99,4 +99,36 @@ body {
   /*margin-top: 60px;*/
 }
 
+.container {
+  padding: 20px;
+}
+
+.pageTitle {
+  font-size: 25px;
+  
+  margin-bottom: 50px;
+}
+
+.pageTitle .actions {
+  float: right;
+}
+
+input, textarea {
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  width: calc(100% - 20px);
+}
+
+button {
+  border: none;
+  padding: 10px;
+  background: #273c75;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 </style>

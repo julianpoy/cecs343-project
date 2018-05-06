@@ -2,11 +2,11 @@
   <div class="container">
     <div class="pageTitle">
       Recipes
+      
+      <div class="actions">
+        <button v-on:click="createRecipe()">New Recipe</button>
+      </div>
     </div>
-    <div class="newRecipe">
-      <button class="standard" v-on:click="createRecipe()">New Recipe</button>
-    </div>
-    <br />
     <div class="recipeListContainer">
       <div class="recipe" v-for="recipe in recipes" :key="recipe._id" v-on:click="openRecipe(recipe._id)">
         <b>{{ recipe.title }}</b><br /><br />
@@ -47,39 +47,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .container {
-    padding: 20px;
-  }
+.recipeListContainer {
+  display: flex;
+}
 
-  .recipeListContainer {
-    display: flex;
-  }
-
-  .recipeListContainer .recipe {
-    padding: 15px;
-    margin: 10px;
-    box-shadow: 1px 1px 7px rgba(0,0,0,0.7);
-    min-width: 300px;
-  }
-  
-  .pageTitle {
-    display: inline-block;
-    
-    font-size: 25px;
-    
-    margin-bottom: 50px;
-  }
-  
-  .newRecipe {
-    float: right;
-  }
-  
-  button {
-    border: none;
-    padding: 10px;
-    background: #273c75;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.recipeListContainer .recipe {
+  padding: 15px;
+  margin: 10px;
+  box-shadow: 1px 1px 7px rgba(0,0,0,0.7);
+  min-width: 300px;
+}
 </style>
