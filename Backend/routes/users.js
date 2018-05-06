@@ -4,10 +4,9 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Session = mongoose.model('Session');
-var cors = require('cors');
 
 /* Log in user */
-router.post('/login', cors(), function(req, res) {
+router.post('/login', function(req, res) {
   //Find a user with the username requested. Select salt and password
   User.findOne({  //mongoose defined method for user model
       username: req.body.username.toLowerCase() //like SQL WHERE statement to search by parameters
@@ -56,7 +55,7 @@ router.post('/login', cors(), function(req, res) {
 });
 
 /* Join as a user */
-router.post('/join', cors(), function(req, res, next) {
+router.post('/join', function(req, res, next) {
   var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
   if (!emailRegex.test(req.body.username)) {
     res.status(412).json({
@@ -116,7 +115,7 @@ router.post('/join', cors(), function(req, res, next) {
 });
 
 /* Update user */
-router.put('/', cors(), function(req, res, next) {
+router.put('/', function(req, res, next) {
   var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
   if (req.body.username && !emailRegex.test(req.body.username)) {
     res.status(412).json({
@@ -171,7 +170,7 @@ router.put('/', cors(), function(req, res, next) {
 });
 
 /* Check if a session token is valid */
-router.get('/session', cors(), function(req, res, next) {
+router.get('/session', function(req, res, next) {
   Session.findOne({
       token: req.query.token
     })
