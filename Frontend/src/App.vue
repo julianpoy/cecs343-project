@@ -2,7 +2,7 @@
   <div id="app">
     <div class="nav">
       <div class="nav-header">
-        CECS 343 Recipe Program
+        RecipeMe
       </div>
       <div class="nav-content">
         <div class="item" v-if="isLoggedIn()" v-on:click="goTo('recipes')">
@@ -51,7 +51,7 @@ html, body {
 }
 
 html {
-  background: lightgrey;
+  background: #f9f9f9;
 }
 
 body {
@@ -129,6 +129,17 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .nav .nav-content {
+    padding-right: 5px;
+  }
+
+  .nav .nav-content .item {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 }
 
 </style>

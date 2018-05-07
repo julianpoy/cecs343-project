@@ -49,6 +49,7 @@ export default {
 <style scoped>
 .recipeListContainer {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .recipeListContainer .recipe {
@@ -56,5 +57,12 @@ export default {
   margin: 10px;
   box-shadow: 1px 1px 7px rgba(0,0,0,0.7);
   min-width: 300px;
+}
+
+@media screen and (max-width: 600px) {
+  .recipeListContainer .recipe {
+    min-width: 0;
+    width: 100%;
+  }
 }
 </style>
