@@ -77,6 +77,41 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/export', function(req, res) {
+  Session.findOne({
+      token: req.query.token
+    })
+    .select('user_id')
+    .exec(function(err, session) {
+      if (err) {
+        res.status(500).json({
+          msg: "Couldn't search the database for session!"
+        });
+      } else if (!session) {
+        res.status(401).json({
+          msg: "Session is not valid!"
+        });
+      } else {
+        Recipe.find({
+          user_id: session.user_id
+        }).sort('-updated_at').lean().exec(function(err, recipes, count) {
+          if (err) {
+            res.status(500).json({
+              msg: "Couldn't search the database for recipes!"
+            });
+          } else {
+            var data = JSON.stringify(recipes);
+            res.setHeader('Content-disposition', 'attachment; filename= recipe-export.rme');
+            res.setHeader('Content-type', 'application/json');
+            res.write(data, function (err) {
+              res.end();
+            });
+          }
+        });
+      }
+    });
+});
+
 //Get a user's recipe by it's id
 router.get('/:id', function(req, res) {
   Session.findOne({
