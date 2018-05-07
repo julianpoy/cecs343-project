@@ -77,6 +77,37 @@ router.get('/', function(req, res) {
     });
 });
 
+//Get a user's recipe by it's id
+router.get('/:id', function(req, res) {
+  Session.findOne({
+      token: req.query.token
+    })
+    .select('user_id')
+    .exec(function(err, session) {
+      if (err) {
+        res.status(500).json({
+          msg: "Couldn't search the database for session!"
+        });
+      } else if (!session) {
+        res.status(401).json({
+          msg: "Session is not valid!"
+        });
+      } else {
+        Recipe.findOne({
+          _id: req.params.id,
+          user_id: session.user_id
+        }).exec(function(err, recipe) {
+          if (err) {
+            res.status(500).json({
+              msg: "Couldn't search the database for recipes!"
+            });
+          } else {
+            res.status(200).json(recipe);
+          }
+        });
+      }
+    });
+});
 
 //Update a recipe
 router.put('/:id', function(req, res) {
