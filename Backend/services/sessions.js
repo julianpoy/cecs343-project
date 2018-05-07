@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 //Checks if a token exists, and returns the corrosponding user_id
 exports.validateSession = function(token, success, fail) {
   Session.findOne({token: token})
-    .select('user_id type')
+    .select('user_id')
     .exec(function(err, session) {
       if (err) {
         fail({
@@ -31,7 +31,7 @@ exports.generateSession = function(user_id, success, fail) {
   new Session({
     user_id: user_id,
     token: token,
-    created: Date.now()
+    created_at: Date.now()
   }).save(function(err) {
     if (err) {
       fail({

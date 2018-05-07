@@ -4,13 +4,14 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Session = mongoose.model('Session');
+var SessionService = require('../services/sessions.js');
 
 /* Log in user */
 router.post('/login', function(req, res) {
   //Find a user with the username requested. Select salt and password
   User.findOne({  //mongoose defined method for user model
       username: req.body.username.toLowerCase() //like SQL WHERE statement to search by parameters
-    })
+  })
     .select('password salt')  //space seperated (2 parameters here)
     .exec(function(err, user) {  //ends the .chain of methods
       if (err) {
@@ -26,24 +27,13 @@ router.post('/login', function(req, res) {
         var hash = crypto.pbkdf2Sync(req.body.password, user.salt, 10000, 512, 'sha512').toString('base64');
         //Compare to stored hash
         if (hash == user.password) {
-          //Create a random token
-          var token = crypto.randomBytes(48).toString('hex');
-          //New session!
-          new Session({
-            user_id: user._id,
-            token: token
-          }).save(function(err) {
-            if (err) {
-              console.log("Error saving token to DB!");
-              res.status(500).json({
-                msg: "Error saving token to DB!"
-              });
-            } else {
-              //All good, give the user their token
-              res.status(200).json({
-                token: token
-              });
-            }
+          SessionService.generateSession(user._id, function(token){
+            //All good, give the user their token
+            res.status(200).json({
+              token: token
+            });
+          }, function(err){
+            res.status(err.status).json(err);
           });
         } else {
           res.status(401).json({
@@ -78,7 +68,7 @@ router.post('/join', function(req, res, next) {
           //Create a unique hash from the provided password and salt
           var hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 512, 'sha512').toString('base64');
           //Create a new user with the assembled information
-          var newUser = new User({
+          new User({
             username: req.body.username.toLowerCase(),
             screenname: req.body.screenname,
             password: hash,
@@ -90,23 +80,13 @@ router.post('/join', function(req, res, next) {
                 msg: "Error saving user to DB!"
               });
             } else {
-              //Create a random token
-              var token = crypto.randomBytes(48).toString('base64');
-              //New session!
-              new Session({
-                user_id: newUser._id,
-                token: token
-              }).save(function(err) {
-                if (err) {
-                  res.status(500).json({
-                    msg: "Error saving token to DB!"
-                  });
-                } else {
-                  //All good, give the user their token
-                  res.status(201).json({
-                    token: token
-                  });
-                }
+              SessionService.generateSession(newUser._id, function(token){
+                //All good, give the user their token
+                res.status(200).json({
+                  token: token
+                });
+              }, function(err){
+                res.status(err.status).json(err);
               });
             }
           });
@@ -123,76 +103,41 @@ router.put('/', function(req, res, next) {
       msg: "Email is not valid!"
     });
   } else {
-    Session.findOne({
-        token: req.query.token
-      })
-      .select('user_id')
-      .exec(function(err, session) {
+    SessionService.validateSession(req.query.token, function(user_id) {
+      var updatedUser = {};
+
+      if (req.body.username && typeof req.body.username === 'string') updatedUser.username = req.body.username;
+      if (req.body.screenname && typeof req.body.screenname === 'string') updatedUser.screenname = req.body.screenname;
+      if (req.body.password && typeof req.body.password === 'string') {
+        //Create a random salt
+        var salt = crypto.randomBytes(128).toString('base64');
+        //Create a unique hash from the provided password and salt
+        var hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 512, 'sha512').toString('base64');
+        updatedUser.password = hash;
+        updatedUser.salt = salt;
+      }
+
+      var setUser = {
+        $set: updatedUser
+      }
+      console.log(user_id);
+
+      User.update({
+        _id: user_id
+      }, setUser)
+      .exec(function(err, user) {
         if (err) {
           res.status(500).json({
-            msg: "Couldn't search the database for session!"
-          });
-        } else if (!session) {
-          res.status(401).json({
-            msg: "Session is not valid!"
+            msg: "Could not update user"
           });
         } else {
-          var updatedUser = {};
-
-          if (req.body.username && typeof req.body.username === 'string') updatedUser.username = req.body.username;
-          if (req.body.screenname && typeof req.body.screenname === 'string') updatedUser.screenname = req.body.screenname;
-          if (req.body.password && typeof req.body.password === 'string') {
-            //Create a random salt
-            var salt = crypto.randomBytes(128).toString('base64');
-            //Create a unique hash from the provided password and salt
-            var hash = crypto.pbkdf2Sync(req.body.password, salt, 10000, 512, 'sha512').toString('base64');
-            updatedUser.password = hash;
-            updatedUser.salt = salt;
-          }
-
-          var setUser = {
-            $set: updatedUser
-          }
-
-          User.update({
-              _id: session.user_id
-            }, setUser)
-            .exec(function(err, user) {
-              if (err) {
-                res.status(500).json({
-                  msg: "Could not update user"
-                });
-              } else {
-                res.status(200).json(user);
-              }
-            });
+          res.status(200).json(user);
         }
       });
+    }, function(err) {
+      res.status(err.status).json(err);
+    });
   }
-});
-
-/* Check if a session token is valid */
-router.get('/session', function(req, res, next) {
-  Session.findOne({
-    token: req.query.token
-  })
-  .select('user_id')
-  .exec(function(err, session) {
-    if (err) {
-      res.status(500).json({
-        msg: "Couldn't search the database for session!"
-      });
-    } else if (!session) {
-      res.status(401).json({
-        msg: "Session is not valid!"
-      });
-    } else {
-      //Then the user exists, and the session token is valid!
-      res.status(200).json({
-        token: req.query.token
-      });
-    }
-  });
 });
 
 module.exports = router;

@@ -114,6 +114,7 @@ router.put('/:id', function(req, res) {
             recipe.ingredients = req.body.ingredients;
             recipe.notes = req.body.notes;
             recipe.updated_at = Date.now();
+            recipe.is_public = req.body.isPublic;
 
             //Save the modified
             recipe.save(function(err, recipe, count) {
