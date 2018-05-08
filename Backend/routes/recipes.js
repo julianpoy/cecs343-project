@@ -21,10 +21,7 @@ router.post('/', function(req, res) {
         });
       } else {
         new Recipe({
-<<<<<<< HEAD
           //json object the a recipe object contains
-=======
->>>>>>> dbb1dfe68fd3ec6358da1bfb720e0d2142da13b5
           user_id: session.user_id,
 					title: req.body.title,
           instructions: req.body.instructions,
@@ -35,10 +32,7 @@ router.post('/', function(req, res) {
           updated_at: Date.now(),
           is_public: req.body.isPublic
         }).save(function(err, recipe, count) {
-<<<<<<< HEAD
           //.save will save our new recipe object in the backend
-=======
->>>>>>> dbb1dfe68fd3ec6358da1bfb720e0d2142da13b5
           if (err) {
             res.status(500).json({
               msg: "Error saving the recipe!"
