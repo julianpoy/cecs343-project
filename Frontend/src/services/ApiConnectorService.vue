@@ -37,8 +37,10 @@ export default {
     },
   },
   recipes: {
-    fetch(success, error) {
-      axios.get(`${apiBase}recipes${getTokenQuery()}`)
+    fetch(payload, success, error) {
+      axios.get(`${apiBase}recipes${getTokenQuery()}`, {
+        params: payload || {}
+      })
         .then((response) => {
           success(response.data);
         })
@@ -63,6 +65,9 @@ export default {
         .catch((e) => {
           error(e);
         });
+    },
+    openExport() {
+      window.open(`${apiBase}recipes/export${getTokenQuery()}`);
     },
   },
 };

@@ -21,7 +21,10 @@ router.post('/', function(req, res) {
         });
       } else {
         new Recipe({
+<<<<<<< HEAD
           //json object the a recipe object contains
+=======
+>>>>>>> dbb1dfe68fd3ec6358da1bfb720e0d2142da13b5
           user_id: session.user_id,
 					title: req.body.title,
           instructions: req.body.instructions,
@@ -32,7 +35,10 @@ router.post('/', function(req, res) {
           updated_at: Date.now(),
           is_public: req.body.isPublic
         }).save(function(err, recipe, count) {
+<<<<<<< HEAD
           //.save will save our new recipe object in the backend
+=======
+>>>>>>> dbb1dfe68fd3ec6358da1bfb720e0d2142da13b5
           if (err) {
             res.status(500).json({
               msg: "Error saving the recipe!"
@@ -116,6 +122,46 @@ router.get('/', function(req, res) {
           msg: "Session is not valid!"
         });
       } else {
+        // Variable query based on public query
+        var query;
+        if (req.query.listPublic) {
+          query = {
+            is_public: true
+          };
+        } else {
+          query = {
+            user_id: session.user_id
+          };
+        }
+
+        Recipe.find(query).sort('-updated_at').lean().exec(function(err, recipes, count) {
+          if (err) {
+            res.status(500).json({
+              msg: "Couldn't search the database for recipes!"
+            });
+          } else {
+            res.status(200).json(recipes);
+          }
+        });
+      }
+    });
+});
+
+router.get('/export', function(req, res) {
+  Session.findOne({
+      token: req.query.token
+    })
+    .select('user_id')
+    .exec(function(err, session) {
+      if (err) {
+        res.status(500).json({
+          msg: "Couldn't search the database for session!"
+        });
+      } else if (!session) {
+        res.status(401).json({
+          msg: "Session is not valid!"
+        });
+      } else {
         Recipe.find({
           user_id: session.user_id
         }).sort('-updated_at').lean().exec(function(err, recipes, count) {
@@ -124,7 +170,12 @@ router.get('/', function(req, res) {
               msg: "Couldn't search the database for recipes!"
             });
           } else {
-            res.status(200).json(recipes);
+            var data = JSON.stringify(recipes);
+            res.setHeader('Content-disposition', 'attachment; filename= recipe-export.rme');
+            res.setHeader('Content-type', 'application/json');
+            res.write(data, function (err) {
+              res.end();
+            });
           }
         });
       }

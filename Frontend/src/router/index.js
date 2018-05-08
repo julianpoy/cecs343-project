@@ -5,6 +5,7 @@ import Welcome from '@/components/Welcome';
 import Settings from '@/components/Settings';
 
 import Recipes from '@/components/Recipes';
+import PublicRecipes from '@/components/PublicRecipes';
 import ViewRecipe from '@/components/ViewRecipe';
 import EditRecipe from '@/components/EditRecipe';
 import NewRecipe from '@/components/NewRecipe';
@@ -22,6 +23,11 @@ export default new Router({
       path: '/recipes',
       name: 'Recipes',
       component: Recipes,
+    },
+    {
+      path: '/recipes/public',
+      name: 'PublicRecipes',
+      component: PublicRecipes,
     },
     {
       path: '/recipes/new',

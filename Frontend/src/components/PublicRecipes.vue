@@ -1,12 +1,7 @@
 <template>
   <div class="container">
     <div class="pageTitle">
-      Recipes
-      
-      <div class="actions">
-        <button v-on:click="createRecipe()">New Recipe</button>
-        <button v-on:click="browsePublicRecipes()">Browse Public Recipes</button>
-      </div>
+      Public Recipes
     </div>
     <div class="recipeListContainer">
       <div class="recipe" v-for="recipe in recipes" :key="recipe._id" v-on:click="openRecipe(recipe._id)">
@@ -21,7 +16,7 @@
 import ApiConnectorService from '@/services/ApiConnectorService';
 
 export default {
-  name: 'Recipes',
+  name: 'PublicRecipes',
   data() {
     return {
       recipes: [],
@@ -35,12 +30,11 @@ export default {
     openRecipe(id) {
       window.location.href = `/#/recipes/${id}`;
     },
-    browsePublicRecipes() {
-      window.location.href = `/#/recipes/public`;
-    },
   },
   beforeMount() {
-    ApiConnectorService.recipes.fetch(null, (recipes) => {
+    ApiConnectorService.recipes.fetch({
+      listPublic: true
+    }, (recipes) => {
       this.recipes = recipes;
     }, (err) => {
       this.error = `There was an error... ${err.message}`;
