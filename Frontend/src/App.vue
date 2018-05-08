@@ -105,7 +105,7 @@ body {
 
 .pageTitle {
   font-size: 25px;
-  
+
   margin-bottom: 50px;
 }
 

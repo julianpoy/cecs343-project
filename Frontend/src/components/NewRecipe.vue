@@ -17,17 +17,17 @@
 import ApiConnectorService from '@/services/ApiConnectorService';
 
 export default {
-  name: 'Auth',
+  name: 'NewRecipe',
   data() {
     return {
       recipe: {},
-      error: ''
+      error: '',
     };
   },
   methods: {
     save() {
       ApiConnectorService.recipes.create(this.recipe, (response) => {
-        window.location.href = `/#/recipes/${response['_id']}`;
+        window.location.href = `/#/recipes/${response._id}`;
       }, (err) => {
         this.error = `There was an error... ${err.response.data.msg}`;
       });

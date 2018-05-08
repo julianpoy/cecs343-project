@@ -39,7 +39,7 @@ export default {
   recipes: {
     fetch(payload, success, error) {
       axios.get(`${apiBase}recipes${getTokenQuery()}`, {
-        params: payload || {}
+        params: payload || {},
       })
         .then((response) => {
           success(response.data);
@@ -59,6 +59,15 @@ export default {
     },
     create(payload, success, error) {
       axios.post(`${apiBase}recipes${getTokenQuery()}`, payload)
+        .then((response) => {
+          success(response.data);
+        })
+        .catch((e) => {
+          error(e);
+        });
+    },
+    duplicate(id, success, error) {
+      axios.post(`${apiBase}recipes/copy/${id}${getTokenQuery()}`, {})
         .then((response) => {
           success(response.data);
         })

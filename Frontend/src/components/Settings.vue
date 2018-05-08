@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     exportRecipes() {
-      ApiConnectorService.recipes.openExport()
+      ApiConnectorService.recipes.openExport();
     },
   },
 };

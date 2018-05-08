@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       recipe: {},
-      error: ''
+      error: '',
     };
   },
   methods: {

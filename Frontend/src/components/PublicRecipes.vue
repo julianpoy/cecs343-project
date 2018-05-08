@@ -4,7 +4,11 @@
       Public Recipes
     </div>
     <div class="recipeListContainer">
-      <div class="recipe" v-for="recipe in recipes" :key="recipe._id" v-on:click="openRecipe(recipe._id)">
+      <div
+        class="recipe"
+        v-for="recipe in recipes"
+        :key="recipe._id"
+        v-on:click="openRecipe(recipe._id)">
         <b>{{ recipe.title }}</b><br /><br />
         {{ recipe.description }}
       </div>
@@ -33,7 +37,7 @@ export default {
   },
   beforeMount() {
     ApiConnectorService.recipes.fetch({
-      listPublic: true
+      listPublic: true,
     }, (recipes) => {
       this.recipes = recipes;
     }, (err) => {

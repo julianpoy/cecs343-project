@@ -4,7 +4,12 @@
     {{ isRegistering ? 'Register' : 'Login' }}
     <br /><br />
     <form onsubmit="return false">
-      <input v-if="isRegistering" v-model="name" class="standard name" placeholder="Name" type="text" />
+      <input
+        v-if="isRegistering"
+        v-model="name"
+        class="standard name"
+        placeholder="Name"
+        type="text" />
       <br />
       <input v-model="username" class="standard username" placeholder="E-Mail" type="text" />
       <br />
@@ -17,7 +22,10 @@
         placeholder="Confirm password"
         type="password" />
       <br /><br />
-      <button type="submit" class="standard submit" v-on:click="auth">{{ isRegistering ? 'Register' : 'Login' }}</button>
+      <button
+        type="submit"
+        class="standard submit"
+        v-on:click="auth">{{ isRegistering ? 'Register' : 'Login' }}</button>
     </form>
     <br /><br />
     <a v-if="!isRegistering" v-on:click="isRegistering = true">Register Instead</a>
@@ -83,7 +91,7 @@ export default {
     font-size: 12px;
     text-decoration: underline;
   }
-  
+
   input, textarea {
     padding: 5px;
     margin-top: 5px;
@@ -91,7 +99,7 @@ export default {
     border: 1px solid lightgrey;
     border-radius: 5px;
   }
-  
+
   button {
     border: none;
     padding: 10px;

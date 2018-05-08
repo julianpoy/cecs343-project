@@ -2,14 +2,15 @@
   <div class="container">
     <div class="pageTitle">
       {{ recipe.title }}
-      
+
       <div class="actions">
-        <button>Edit</button>
-        <button>Delete</button>
+        <button *ngIf="!recipe.is_mine">Save to my recipe library</button>
+        <button *ngIf="recipe.is_mine">Edit</button>
+        <button *ngIf="recipe.is_mine">Delete</button>
       </div>
     </div>
     <br />
-    
+
     Description: {{ recipe.description }}<br /><br />
     Ingedients: <br />
     {{ recipe.ingredients }}<br /><br />
@@ -26,8 +27,17 @@ export default {
   data() {
     return {
       recipe: {},
-      error: ''
+      error: '',
     };
+  },
+  methods: {
+    duplicate() {
+      ApiConnectorService.recipes.duplicate(this.$route.params.id, (response) => {
+        window.location.href = `/#/recipes/${response._id}`;
+      }, (err) => {
+        this.error = `There was an error... ${err.response.data.msg}`;
+      });
+    },
   },
   beforeMount() {
     ApiConnectorService.recipes.getById(this.$route.params.id, (response) => {
@@ -35,7 +45,7 @@ export default {
     }, (err) => {
       this.error = `There was an error... ${err.response.data.msg}`;
     });
-  }
+  },
 };
 </script>
 

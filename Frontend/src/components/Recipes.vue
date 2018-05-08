@@ -2,14 +2,18 @@
   <div class="container">
     <div class="pageTitle">
       Recipes
-      
+
       <div class="actions">
         <button v-on:click="createRecipe()">New Recipe</button>
         <button v-on:click="browsePublicRecipes()">Browse Public Recipes</button>
       </div>
     </div>
     <div class="recipeListContainer">
-      <div class="recipe" v-for="recipe in recipes" :key="recipe._id" v-on:click="openRecipe(recipe._id)">
+      <div
+        class="recipe"
+        v-for="recipe in recipes"
+        :key="recipe._id"
+        v-on:click="openRecipe(recipe._id)">
         <b>{{ recipe.title }}</b><br /><br />
         {{ recipe.description }}
       </div>
@@ -36,7 +40,7 @@ export default {
       window.location.href = `/#/recipes/${id}`;
     },
     browsePublicRecipes() {
-      window.location.href = `/#/recipes/public`;
+      window.location.href = '/#/recipes/public';
     },
   },
   beforeMount() {
