@@ -17,7 +17,7 @@
 import ApiConnectorService from '@/services/ApiConnectorService';
 
 export default {
-  name: 'NewRecipe',
+  name: 'Auth',
   data() {
     return {
       recipe: {},
