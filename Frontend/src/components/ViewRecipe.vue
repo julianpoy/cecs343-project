@@ -22,7 +22,7 @@
 import ApiConnectorService from '@/services/ApiConnectorService';
 
 export default {
-  name: 'Auth',
+  name: 'ViewRecipe',
   data() {
     return {
       recipe: {},

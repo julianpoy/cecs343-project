@@ -8,7 +8,7 @@
 import ApiConnectorService from '@/services/ApiConnectorService';
 
 export default {
-  name: 'Auth',
+  name: 'EditRecipe',
   data() {
     return {
       recipe: {},

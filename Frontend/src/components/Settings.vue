@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import ApiConnectorService from '@/services/ApiConnectorService';
+
 export default {
   name: 'Settings',
   data() {
@@ -12,7 +14,7 @@ export default {
   },
   methods: {
     exportRecipes() {
-      alert("Placeholder - Will take user to external link to download")
+      ApiConnectorService.recipes.openExport()
     },
   },
 };

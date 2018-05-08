@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Recipe = mongoose.model('Recipe');
 var Session = mongoose.model('Session');
 
-//Create a new link
+//Create a new recipe
 router.post('/', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -21,7 +21,6 @@ router.post('/', function(req, res) {
         });
       } else {
         new Recipe({
-          //json object the a link object contains
           user_id: session.user_id,
 					title: req.body.title,
           instructions: req.body.instructions,
@@ -32,7 +31,6 @@ router.post('/', function(req, res) {
           updated_at: Date.now(),
           is_public: req.body.isPublic
         }).save(function(err, recipe, count) {
-          //.save will save our new link object in the backend
           if (err) {
             res.status(500).json({
               msg: "Error saving the recipe!"
@@ -62,9 +60,19 @@ router.get('/', function(req, res) {
           msg: "Session is not valid!"
         });
       } else {
-        Recipe.find({
-          user_id: session.user_id
-        }).sort('-updated_at').lean().exec(function(err, recipes, count) {
+        // Variable query based on public query
+        var query;
+        if (req.query.listPublic) {
+          query = {
+            is_public: true
+          };
+        } else {
+          query = {
+            user_id: session.user_id
+          };
+        }
+
+        Recipe.find(query).sort('-updated_at').lean().exec(function(err, recipes, count) {
           if (err) {
             res.status(500).json({
               msg: "Couldn't search the database for recipes!"
