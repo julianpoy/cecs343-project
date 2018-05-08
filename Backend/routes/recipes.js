@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Recipe = mongoose.model('Recipe');
 var Session = mongoose.model('Session');
 
-//Create a new link
+//Create a new recipe
 router.post('/', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -21,7 +21,7 @@ router.post('/', function(req, res) {
         });
       } else {
         new Recipe({
-          //json object the a link object contains
+          //json object the a recipe object contains
           user_id: session.user_id,
 					title: req.body.title,
           instructions: req.body.instructions,
@@ -32,7 +32,7 @@ router.post('/', function(req, res) {
           updated_at: Date.now(),
           is_public: req.body.isPublic
         }).save(function(err, recipe, count) {
-          //.save will save our new link object in the backend
+          //.save will save our new recipe object in the backend
           if (err) {
             res.status(500).json({
               msg: "Error saving the recipe!"
@@ -40,6 +40,60 @@ router.post('/', function(req, res) {
           } else {
             recipe = recipe.toObject();
             res.status(201).json(recipe);
+          }
+        });
+      }
+    });
+});
+
+//Copy a public recipe into personal library
+router.post('/copy/:id', function(req, res) {
+  Session.findOne({
+      token: req.query.token
+    })
+    .select('user_id')
+    .exec(function(err, session) {
+      if (err) {
+        res.status(500).json({
+          msg: "Couldn't search the database for session!"
+        });
+      } else if (!session) {
+        res.status(401).json({
+          msg: "Session is not valid!"
+        });
+      } else {
+        //recipe with that id is public or in user's library
+        Recipe.findOne({
+          _id: req.params.id,
+          $or: [ { user_id: session.user_id }, { is_public: true } ]
+        }).exec(function(err, recipe) {
+          if (err) {
+            res.status(500).json({
+              msg: "Couldn't search the database for recipes!"
+            });
+          } else {
+            new Recipe({
+              //copy pasta (sometimes literally)
+              user_id: session.user_id,
+              title: recipe.title,
+              instructions: recipe.instructions,
+              description: recipe.description,
+              ingredients: recipe.ingredients,
+              notes: recipe.notes,
+              created_at: Date.now(),
+              updated_at: Date.now(),
+              is_public: false
+            }).save(function(err, recipe, count) {
+              //.save will save our new recipe object in the backend
+              if (err) {
+                res.status(500).json({
+                  msg: "Error saving the recipe!"
+                });
+              } else {
+                recipe = recipe.toObject();
+                res.status(201).json(recipe);
+              }
+            });
           }
         });
       }
