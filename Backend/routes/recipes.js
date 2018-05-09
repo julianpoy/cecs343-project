@@ -4,7 +4,6 @@ var mongoose = require('mongoose');
 var Recipe = mongoose.model('Recipe');
 var Session = mongoose.model('Session');
 
-//Create a new recipe
 router.post('/', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -21,7 +20,6 @@ router.post('/', function(req, res) {
         });
       } else {
         new Recipe({
-          //json object the a recipe object contains
           user_id: session.user_id,
 					title: req.body.title,
           instructions: req.body.instructions,
@@ -32,7 +30,6 @@ router.post('/', function(req, res) {
           updated_at: Date.now(),
           is_public: req.body.isPublic
         }).save(function(err, recipe, count) {
-          //.save will save our new recipe object in the backend
           if (err) {
             res.status(500).json({
               msg: "Error saving the recipe!"
@@ -46,7 +43,6 @@ router.post('/', function(req, res) {
     });
 });
 
-//Copy a public recipe into personal library
 router.post('/copy/:id', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -62,7 +58,6 @@ router.post('/copy/:id', function(req, res) {
           msg: "Session is not valid!"
         });
       } else {
-        //recipe with that id is public or in user's library
         Recipe.findOne({
           _id: req.params.id,
           $or: [ { user_id: session.user_id }, { is_public: true } ]
@@ -102,7 +97,6 @@ router.post('/copy/:id', function(req, res) {
     });
 });
 
-//Get all of a user's recipes
 router.get('/', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -118,7 +112,6 @@ router.get('/', function(req, res) {
           msg: "Session is not valid!"
         });
       } else {
-        // Variable query based on public query
         var query;
         if (req.query.listPublic) {
           query = {
@@ -130,7 +123,12 @@ router.get('/', function(req, res) {
           };
         }
 
-        Recipe.find(query).sort('-updated_at').lean().exec(function(err, recipes, count) {
+        Recipe
+          .find(query)
+          .populate('user_id', 'screenname')
+          .sort('-updated_at')
+          .lean()
+          .exec(function(err, recipes, count) {
           if (err) {
             res.status(500).json({
               msg: "Couldn't search the database for recipes!"
@@ -178,7 +176,6 @@ router.get('/export', function(req, res) {
     });
 });
 
-//Get a user's recipe by it's id
 router.get('/:id', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -197,7 +194,7 @@ router.get('/:id', function(req, res) {
         Recipe.findOne({
           _id: req.params.id,
           $or: [{ user_id: session.user_id }, { is_public: true }]
-        }).lean().exec(function(err, recipe) {
+        }).populate('user_id', 'screenname').lean().exec(function(err, recipe) {
           if (err) {
             res.status(500).json({
               msg: "Couldn't search the database for recipes!"
@@ -207,7 +204,7 @@ router.get('/:id', function(req, res) {
               msg: "Not found or no permissions to view"
             });
           } else {
-            recipe.is_mine = recipe.user_id === session.user_id;
+            recipe.is_mine = recipe.user_id._id.toString() === session.user_id.toString();
             res.status(200).json(recipe);
           }
         });
@@ -215,7 +212,6 @@ router.get('/:id', function(req, res) {
     });
 });
 
-//Update a recipe
 router.put('/:id', function(req, res) {
   Session.findOne({
       token: req.query.token
@@ -244,7 +240,6 @@ router.put('/:id', function(req, res) {
               msg: "Recipe does not exist!"
             });
           } else {
-            //Simply change the variables of the recipe
             recipe.title = req.body.title,
             recipe.instructions = req.body.instructions;
             recipe.description = req.body.description;
@@ -253,9 +248,7 @@ router.put('/:id', function(req, res) {
             recipe.updated_at = Date.now();
             recipe.is_public = req.body.is_public;
 
-            //Save the modified
             recipe.save(function(err, recipe, count) {
-              //.save will save our new recipe object in the backend
               res.status(200).json(recipe);
             });
           }
@@ -264,9 +257,6 @@ router.put('/:id', function(req, res) {
     });
 });
 
-//DELETE
-//Using the ORM (object relational mapping) which is mongoose
-//it will find a recipe by it's mongoose id, and remove it from the backend
 router.delete('/:id', function(req, res) {
   Session.findOne({
       token: req.query.token

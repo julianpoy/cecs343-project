@@ -41,7 +41,10 @@
     <b>This recipe is {{ recipe.is_public ? 'public' : 'private' }}.</b><br />
 
     <b v-if="recipe.is_mine">This recipe is yours.</b>
-    <b v-if="!recipe.is_mine">You can save this recipe to your libary.</b>
+    <b v-if="!recipe.is_mine">
+      This recipe was posted by {{ (recipe.user_id || {}).screenname || 'another user' }}.
+      You can save this recipe to your libary.
+    </b>
   </div>
 </template>
 

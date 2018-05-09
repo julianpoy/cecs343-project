@@ -6,16 +6,14 @@ var User = mongoose.model('User');
 var Session = mongoose.model('Session');
 var SessionService = require('../services/sessions.js');
 
-/* Log in user */
 router.post('/login', function(req, res) {
-  //Find a user with the username requested. Select salt and password
-  User.findOne({  //mongoose defined method for user model
-      username: req.body.username.toLowerCase() //like SQL WHERE statement to search by parameters
+  User.findOne({
+      username: req.body.username.toLowerCase()
   })
-    .select('password salt')  //space seperated (2 parameters here)
-    .exec(function(err, user) {  //ends the .chain of methods
+    .select('password salt')
+    .exec(function(err, user) {
       if (err) {
-        res.status(500).json({  //sent from server to client
+        res.status(500).json({
           msg: "Couldn't search the database for user!"
         });
       } else if (!user) {
@@ -28,7 +26,6 @@ router.post('/login', function(req, res) {
         //Compare to stored hash
         if (hash == user.password) {
           SessionService.generateSession(user._id, function(token){
-            //All good, give the user their token
             res.status(200).json({
               token: token
             });
@@ -44,7 +41,6 @@ router.post('/login', function(req, res) {
     });
 });
 
-/* Join as a user */
 router.post('/join', function(req, res, next) {
   var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
   if (!emailRegex.test(req.body.username)) {
@@ -52,7 +48,6 @@ router.post('/join', function(req, res, next) {
       msg: "Email is not valid!"
     });
   } else {
-    //Check if a user with that username already exists
     User.findOne({
         username: req.body.username.toLowerCase()
       })
@@ -81,7 +76,6 @@ router.post('/join', function(req, res, next) {
               });
             } else {
               SessionService.generateSession(newUser._id, function(token){
-                //All good, give the user their token
                 res.status(200).json({
                   token: token
                 });
@@ -95,7 +89,6 @@ router.post('/join', function(req, res, next) {
   }
 });
 
-/* Update user */
 router.put('/', function(req, res, next) {
   var emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/;
   if (req.body.username && !emailRegex.test(req.body.username)) {

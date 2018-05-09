@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var User = new Schema({
-  //email address
   username: {
     type: String
   },
@@ -12,7 +11,6 @@ var User = new Schema({
   salt: {
     type: String
   },
-  //screen name for public use and sharing recipes
   screenname: {
     type: String
   },

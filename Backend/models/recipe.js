@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 
 var Recipe = new Schema({
   user_id: {
-    type: String
+    type: String,
+    ref: 'User'
   },
   title: {
     type: String
