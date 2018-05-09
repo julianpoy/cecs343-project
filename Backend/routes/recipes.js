@@ -71,9 +71,12 @@ router.post('/copy/:id', function(req, res) {
             res.status(500).json({
               msg: "Couldn't search the database for recipes!"
             });
+          } else if(!recipe) {
+            res.status(404).json({
+              msg: "The recipe requested does not exist or is not visible to you!"
+            });
           } else {
             new Recipe({
-              //copy pasta (sometimes literally)
               user_id: session.user_id,
               title: recipe.title,
               instructions: recipe.instructions,
@@ -83,15 +86,14 @@ router.post('/copy/:id', function(req, res) {
               created_at: Date.now(),
               updated_at: Date.now(),
               is_public: false
-            }).save(function(err, recipe, count) {
-              //.save will save our new recipe object in the backend
+            }).save(function(err, newRecipe, count) {
               if (err) {
                 res.status(500).json({
                   msg: "Error saving the recipe!"
                 });
               } else {
-                recipe = recipe.toObject();
-                res.status(201).json(recipe);
+                newRecipe = newRecipe.toObject();
+                res.status(201).json(newRecipe);
               }
             });
           }
@@ -194,13 +196,18 @@ router.get('/:id', function(req, res) {
       } else {
         Recipe.findOne({
           _id: req.params.id,
-          user_id: session.user_id
-        }).exec(function(err, recipe) {
+          $or: [{ user_id: session.user_id }, { is_public: true }]
+        }).lean().exec(function(err, recipe) {
           if (err) {
             res.status(500).json({
               msg: "Couldn't search the database for recipes!"
             });
+          } if (!recipe) {
+            res.status(404).json({
+              msg: "Not found or no permissions to view"
+            });
           } else {
+            recipe.is_mine = recipe.user_id === session.user_id;
             res.status(200).json(recipe);
           }
         });
@@ -244,7 +251,7 @@ router.put('/:id', function(req, res) {
             recipe.ingredients = req.body.ingredients;
             recipe.notes = req.body.notes;
             recipe.updated_at = Date.now();
-            recipe.is_public = req.body.isPublic;
+            recipe.is_public = req.body.is_public;
 
             //Save the modified
             recipe.save(function(err, recipe, count) {
@@ -293,6 +300,8 @@ router.delete('/:id', function(req, res) {
                 res.status(500).json({
                   msg: "Couldn't delete recipe from database"
                 });
+              } else {
+                res.status(200).send("ok");
               }
             });
           }

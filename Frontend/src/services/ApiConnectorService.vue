@@ -5,7 +5,7 @@ import axios from 'axios';
 const apiBase = localStorage.getItem('base') || 'http://localhost:3000/';
 
 function getTokenQuery() {
-  return `?token=${localStorage.getItem('token')}`;
+  return `?token=${localStorage.getItem('token')}&r=${Math.floor(Math.random() * (10 ** 10))}`;
 }
 
 export default {
@@ -68,6 +68,24 @@ export default {
     },
     duplicate(id, success, error) {
       axios.post(`${apiBase}recipes/copy/${id}${getTokenQuery()}`, {})
+        .then((response) => {
+          success(response.data);
+        })
+        .catch((e) => {
+          error(e);
+        });
+    },
+    update(id, payload, success, error) {
+      axios.put(`${apiBase}recipes/${id}${getTokenQuery()}`, payload)
+        .then((response) => {
+          success(response.data);
+        })
+        .catch((e) => {
+          error(e);
+        });
+    },
+    delete(id, success, error) {
+      axios.delete(`${apiBase}recipes/${id}${getTokenQuery()}`, {})
         .then((response) => {
           success(response.data);
         })

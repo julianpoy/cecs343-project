@@ -45,9 +45,13 @@ export default {
 </script>
 
 <style>
-html, body {
-  margin: 0;
+html {
   height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
 }
 
 html {
@@ -129,6 +133,10 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.preserveWhitespace {
+  white-space: pre-line;
 }
 
 @media screen and (max-width: 600px) {
